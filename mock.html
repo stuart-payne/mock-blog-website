@@ -1,0 +1,41 @@
+<p id="findme"></p>
+
+<input id='user' type='text' name="username">
+<input id='pw' type='text' name="password">
+<button type='button' onclick="submitAction()"> Click me </button>
+<br>
+<button type='button' onclick="verifyToken()"> Verify </button>
+
+<script>
+    const url = 'http://localhost:8000/auth';
+    var token;
+    const submitAction = () => {
+        fetch(url, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({
+                username: document.getElementById('user').value,
+                password: document.getElementById('pw').value
+            })
+        })
+        .then(
+            response => {
+                return response.json();
+        })
+        .then((myJson) => {
+            console.log(myJson);
+            token = myJson.token;
+            document.getElementById('findme').textContent = myJson.token;
+        })
+    };
+
+    const verifyUrl = 'http://localhost:8000/verifytest';
+    const verifyToken = () => {
+        fetch(verifyUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization' : token
+            }
+        })
+    };
+</script>
